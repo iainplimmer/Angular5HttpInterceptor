@@ -13,11 +13,14 @@ export class InterceptorService implements HttpInterceptor {
     //  We need to inject the TokenService to avoid cyclical dependecies.
     const tokenService = this.injector.get(TokenService);
 
+    //  We then need to make sure that we dont add the bearer to any requests to the token service.
+    if (request.url.indexOf('token') === -1)
     request = request.clone({
       setHeaders: {
         Authorization: `Bearer ${tokenService.AccessToken}`
       }
     });
+
     return next.handle(request);
   }
 
